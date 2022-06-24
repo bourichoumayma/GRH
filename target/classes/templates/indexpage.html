@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout.html">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/index.js}"></script>
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+    <script th:href="@{/index.js}"></script>
+    <style>
+        /* http://waitanimate.wstone.io/#!/ */
+        .shake {
+            animation: shake-animation 4.72s ease infinite;
+            transform-origin: 50% 50%;
+        }
+
+        @keyframes shake-animation {
+            0% {
+                transform: translate(0, 0)
+            }
+            1.78571% {
+                transform: translate(5px, 0)
+            }
+            3.57143% {
+                transform: translate(0, 0)
+            }
+            5.35714% {
+                transform: translate(5px, 0)
+            }
+            7.14286% {
+                transform: translate(0, 0)
+            }
+            8.92857% {
+                transform: translate(5px, 0)
+            }
+            10.71429% {
+                transform: translate(0, 0)
+            }
+            100% {
+                transform: translate(0, 0)
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div th:if="${passwordNotChanged}" class="alert alert-danger" role="alert">
+        vous n'avez pas changé votre mot de passe il y a un risque que quelqu'un essaie d'accéder à votre compte en
+        utilisant le mot de passe par défaut veuillez changer votre mot de passe à partir d'<a href="/password">ici</a>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    liste de tous les employés
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">matricule</th>
+                            <th scope="col">nom</th>
+                            <th scope="col">prenom</th>
+                            <th scope="col">cin</th>
+                            <th scope="col">post</th>
+                            <th scope="col">active</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="employee : ${employeeList}">
+                            <td th:text="${employee.uid}"></td>
+                            <td th:text="${employee.name}"></td>
+                            <td th:text="${employee.afterName}"></td>
+                            <td th:text="${employee.cin}"></td>
+                            <td th:text="${employee.post}"></td>
+                            <td>
+                                <div class="row">
+                                    <a class="btn btn-danger" th:href="@{/addtobacklist(uid = ${employee.uid})}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-slash-circle-fill" viewBox="0 0 16 16">
+                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.646-2.646a.5.5 0 0 0-.708-.708l-6 6a.5.5 0 0 0 .708.708l6-6z"/>
+                                        </svg>
+                                    </a>
+                                    <button th:class="${employee.acitve == true? 'btn btn-success' : 'btn btn-danger'}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div th:if="${inActiveEmployeeList.size()>0}" class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    liste de tous les employés inactifs
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">matricule</th>
+                            <th scope="col">nom</th>
+                            <th scope="col">prenom</th>
+                            <th scope="col">cin</th>
+                            <th scope="col">post</th>
+                            <th scope="col">active</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="employee : ${inActiveEmployeeList}">
+                            <td th:text="${employee.uid}"></td>
+                            <td th:text="${employee.name}"></td>
+                            <td th:text="${employee.afterName}"></td>
+                            <td th:text="${employee.email}"></td>
+                            <td th:text="${employee.post}"></td>
+                            <td>
+                                <a class="btn btn-success" th:href="@{/activate(uid = ${employee.uid})}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    liste de tous les employés actifs
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">matricule</th>
+                            <th scope="col">nom</th>
+                            <th scope="col">prenom</th>
+                            <th scope="col">cin</th>
+                            <th scope="col">post</th>
+                            <th scope="col">action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="employee : ${activeEmployeeList}">
+                            <td th:text="${employee.uid}"></td>
+                            <td th:text="${employee.name}"></td>
+                            <td th:text="${employee.afterName}"></td>
+                            <td th:text="${employee.cin}"></td>
+                            <td th:text="${employee.post}"></td>
+                            <td>
+                                <div class="row">
+                                    <a class="btn btn-danger" th:href="@{/inactivate(uid=${employee.uid})}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div th:if="${employeeDepart.size() > 0 }" class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between">
+                        <div th:text="'ces employés ont '+${dateNumber} + ' jours avant le départ'">
+                        </div>
+                        <div th:class="${employeeDepart.size() > 0 ? 'shake' : 'd-flex'}">
+                            <button th:class="${employeeDepart.size() > 0 ? 'btn btn-danger' : 'btn btn-success'}"
+                                    id="notifactionButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/save/date}" method="post">
+                        nombre de date avant départ :
+                        <input type="number" class="form-control" id="dateNumber" name="dateNumber" min="1"
+                               th:value="${dateNumber}">
+                        <button class="btn btn-success" type="submit">save</button>
+                    </form>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">matricule</th>
+                            <th scope="col">nom</th>
+                            <th scope="col">prenom</th>
+                            <th scope="col">cin</th>
+                            <th scope="col">post</th>
+                            <th scope="col">active</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="employee : ${employeeDepart}">
+                            <td th:text="${employee.uid}"></td>
+                            <td th:text="${employee.name}"></td>
+                            <td th:text="${employee.afterName}"></td>
+                            <td th:text="${employee.email}"></td>
+                            <td th:text="${employee.post}"></td>
+                            <td>
+                                <button th:class="${employee.acitve == true? 'btn btn-success' : 'btn btn-danger'}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div th:if="${userRole eq 'admin'}" class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    add user
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/add/user}" method="post">
+                        <input type="hidden" th:value="${user.userId}">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Username</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                   placeholder="username" name="username" th:value="${user.username}">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1"
+                                   placeholder="Password" name="password" th:value="${user.password}">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputRole">role</label>
+                            <select class="custom-select" id="exampleInputRole" name="role" th:value="${user.role}">
+                                <option selected>select a role</option>
+                                <option value="admin">admin</option>
+                                <option value="user">user</option>
+                            </select>
+
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div th:if="${userRole eq 'admin'}" class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    liste des utilisateurs
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">username</th>
+                            <th scope="col">role</th>
+                            <th scope="col">action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${usersList}">
+                            <td th:text="${user.userId}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.role}"></td>
+                            <td>
+                                <div th:switch="${user.role}">
+                                    <p th:case="'admin'"></p>
+                                    <p th:case="*">
+                                        <a th:href="@{/removeuser(uid =${user.userId})}" class="btn btn-danger">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                            </svg>
+                                        </a>
+                                    </p>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div th:if="${blackListedEmployee.size() > 0}" class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    list des employeurs
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">matricule</th>
+                            <th scope="col">nom</th>
+                            <th scope="col">prenom</th>
+                            <th scope="col">cin</th>
+                            <th scope="col">tele</th>
+                            <th scope="col">email</th>
+                            <th scope="col">post</th>
+                            <th scope="col">action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="employee : ${blackListedEmployee}">
+                            <td th:text="${employee.uid}"></td>
+                            <td th:text="${employee.name}"></td>
+                            <td th:text="${employee.afterName}"></td>
+                            <td th:text="${employee.cin}"></td>
+                            <td th:text="${employee.phoneNumber}"></td>
+                            <td th:text="${employee.email}"></td>
+                            <td th:text="${employee.post}"></td>
+                            <td>
+                                <div class="row">
+                                    <a class="btn btn-danger" th:href="@{/removefromBlacklist(uid=${employee.uid})}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                                        </svg>
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

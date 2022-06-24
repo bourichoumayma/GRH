@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout.html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.scss}"/>
+    <script th:href="@{/index.js}"></script>
+</head>
+<div layout:fragment="content">
+    <div th:if ="${blackListedCin}" class="alert alert-danger" role="alert" th:text="${blackListedCin}"></div>
+    <div th:if ="${employeeAlreadyExist}" class="alert alert-danger" role="alert" th:text="${employeeAlreadyExist}"></div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    ajouter employeur
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/employee/save}" method="post">
+                        <div class="form-group">
+                            <label for="formControluid">matricule</label>
+                            <input type="text" disabled class="form-control" id="formControluid"
+                                   th:value="${employee.uid}">
+                            <input id="uid" th:field="*{employee.uid}" type="hidden"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlName">nom*</label>
+                            <input type="text" name="name" class="form-control" id="formControlName"
+                                   th:value="${employee.name}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlAfterName">prenom*</label>
+                            <input type="text" name="afterName" class="form-control" id="formControlAfterName"
+                                   th:value="${employee.afterName}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlCIN">C.I.N*</label>
+                            <input type="text" name="cin" class="form-control" id="formControlCIN"
+                                   th:value="${employee.cin}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlAddress">adresse</label>
+                            <input type="text" name="address" class="form-control" id="formControlAddress"
+                                   th:value="${employee.address}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlPhoneNumber">tele*</label>
+                            <input type="text" name="phoneNumber" class="form-control" id="formControlPhoneNumber"
+                                   th:value="${employee.phoneNumber}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlEmail">email</label>
+                            <input type="email" name="email" class="form-control" id="formControlEmail"
+                                   th:value="${employee.email}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlPost">post*</label>
+                            <input type="text" name="post" class="form-control" id="formControlPost"
+                                   th:value="${employee.post}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlSalary">salere</label>
+                            <input type="text" name="salary" class="form-control" id="formControlSalary"
+                                   th:value="${employee.salary}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formControlDiplom">diplom</label>
+                            <input type="text" name="diplom" class="form-control" id="formControlDiplom"
+                                   th:value="${employee.diplom}">
+                        </div>
+                        <button class="btn btn-primary" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    list des employeurs
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">matricule</th>
+                            <th scope="col">nom</th>
+                            <th scope="col">prenom</th>
+                            <th scope="col">cin</th>
+                            <th scope="col">tele</th>
+                            <th scope="col">email</th>
+                            <th scope="col">post</th>
+                            <th scope="col">action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="employee : ${employeeList}">
+                            <td th:text="${employee.uid}"></td>
+                            <td th:text="${employee.name}"></td>
+                            <td th:text="${employee.afterName}"></td>
+                            <td th:text="${employee.cin}"></td>
+                            <td th:text="${employee.phoneNumber}"></td>
+                            <td th:text="${employee.email}"></td>
+                            <td th:text="${employee.post}"></td>
+                            <td>
+                                <div class="row">
+                                    <a class="btn btn-danger" th:href="@{/remove(uid=${employee.uid})}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                                        </svg>
+                                    </a>
+
+                                    <a class="btn btn-primary" th:href="@{/edit(uid = ${employee.uid})}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
